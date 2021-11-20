@@ -1,0 +1,9 @@
+% X es hijo de Y
+hijo(X,Y) :- progenitor(Y,X), masculino(X).
+% X es hija de Y
+hija(X,Y) :- progenitor(Y,X), femenino(X).
+
+% X es nieto de Y
+nieto(X,Y) :- nieto_a(X,Y), masculino(X).
+% X es nieta de Y
+nieta(X,Y) :- nieto_a(X,Y), femenino(X).

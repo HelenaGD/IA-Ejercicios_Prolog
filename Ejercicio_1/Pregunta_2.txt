@@ -1,0 +1,60 @@
+Al principio, implementé "hermano" como 
+hermano(X,Y) :- progenitor(V,X), progenitor(V,Y), masculino(X).
+pero me daba problemas el evaluar, (por ej.) "hermano(juan,X)" ya que decía que era hermano de sí mismo.
+Por ello, añadí la condición (X \= Y).
+Una vez arreglado eso, obtenía dos veces el mismo resultado. Es decir, que en la evaluación anterior obtenía dos veces "X = rosa".
+Después de pensarlo mucho y ejecutar con la opción de "trace", entendí que al tener la condición de "progenitor", estaba evaluando primero al padre y luego a la madre por separado. De ahí que saliera dos veces el mismo resultado.
+Es por ello que hice distinción de género y cambié "progenitor" por "padre y madre", añadiendo estas dos últimas reglas.
+
+Cuando implementé "sobrino", no había solucionado los dos problemas anteriores, por lo que aparecía que una persona era sobrino de sus propios padres. 
+Es por ello que añadí la condición de "not(hijo(X,Y))".
+Una vez arreglado los problemas anteriores, me di cuenta de que no era necesario, y lo eliminé.
+A partir de ahí, no hubo mayor dificultad.
+Añadí la conjunción de "hermano_a" porque no necesitaba hacer distinción por género, ya que lo importante no es el género de tus padres o tus tíos, sino el del sobrino.
+Para aprovechar esta última conjunción, modifiqué la de "hermano" y "hermana" para que hicieran uso de ella.
+De ese modo, pasé de:
+hermano(X,Y) :- padre(V,X), padre(V,Y), madre(W,X), madre(W,Y), (X \= Y), masculino(X).
+a:
+hermano(X,Y) :- hermano_a(X,Y), masculino(X).
+
+Por último, en "primo", como ya lo había hecho una vez realizadas las conjunciones anteriores, no tuve ninguna dificultad.
+Las reglas implementadas para el caso masculino y femenino son análogas, teniendo en cuenta el cambio de "masculino(X)" por "femenino(X)".
+
+Las reglas implementadas fueron las siguientes:
+% X es padre de Y
+padre(X,Y) :- progenitor(X,Y), masculino(X).
+% X es madre de Y
+madre(X,Y) :- progenitor(X,Y), femenino(X).
+
+% X es hermano_a de Y
+hermano_a(X,Y) :- padre(V,X), padre(V,Y), madre(W,X), madre(W,Y), (X \= Y).
+% X es hermano de Y
+hermano(X,Y) :- hermano_a(X,Y), masculino(X).
+% X es hermana de Y
+hermana(X,Y) :- hermano_a(X,Y), femenino(X).
+
+% X es sobrino de Y
+sobrino(X,Y) :- progenitor(V,X), hermano_a(V,Y), masculino(X).
+% X es sobrina de Y
+sobrina(X,Y) :- progenitor(V,X), hermano_a(V,Y), femenino(X).
+
+% X es primo de Y
+primo(X,Y) :- progenitor(V,X), progenitor(W,Y), hermano_a(V,W), masculino(X).
+% X es prima de Y
+prima(X,Y) :- progenitor(V,X), progenitor(W,Y), hermano_a(V,W), femenino(X).
+
+
+Para seguir una estructura similar a las reglas anteriores, se puede implementar las reglas de "sobrino_a" y "primo_a" para que quede de la siguiente forma, en sustitución de las anteriores:
+% X es sobrino_a de Y
+sobrino_a(X,Y) :- progenitor(V,X), hermano_a(V,Y).
+% X es sobrino de Y
+sobrino(X,Y) :- sobrino_a(X,Y), masculino(X).
+% X es sobrina de Y
+sobrina(X,Y) :- sobrino_a(X,Y), femenino(X).
+
+% X es primo_a de Y
+primo_a(X,Y) :- progenitor(V,X), progenitor(W,Y), hermano_a(V,W).
+% X es primo de Y
+primo(X,Y) :- primo_a(X,Y), masculino(X).
+% X es prima de Y
+prima(X,Y) :- primo_a(X,Y), femenino(X).
