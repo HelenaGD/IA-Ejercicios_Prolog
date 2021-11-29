@@ -2,5 +2,5 @@
 % está antes que Y en la lista L. Por ejemplo, 
 % previo(b, e, [a, b, c, d, e, f]) debe dar true.
 
-previo(H,B,[H|T]) :- member(B,T).
-previo(A,B,[_|T]) :- previo(A,B,T).
+previo(A,Y,[A|B]) :- member(Y,B).
+previo(X,Y,[_|B]) :- previo(X,Y,B).
