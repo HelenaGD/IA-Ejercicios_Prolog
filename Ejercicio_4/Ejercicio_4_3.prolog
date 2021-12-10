@@ -18,15 +18,3 @@ mover(N,P1,P2,P3,L) :-
   append(L1, [mover(P1,P3)],L2),
   mover(M, P2, P3, P1,L3),
   append(L2, L3, L).
-
-move(0, _, _, _, []).
-move(N, P1, P2, P3, Moves) :-
-    N > 0,
-    N1 is N - 1,
-    move(N1, P1, P3, P2, M1),
-    append(M1, [mover(P1,P2)], M2),
-    move(N1, P3, P2, P1, M3),
-    append(M2, M3, Moves).
-
-hanoi2(N, Moves) :-
-    move(N, 1, 3, 2, Moves).
