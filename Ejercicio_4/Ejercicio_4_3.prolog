@@ -8,24 +8,25 @@
 % hanoi(3,L) debe dar L = [mover(1, 3), mover(1, 2), mover(3, 2), 
 % mover(1, 3), mover(2, 1), mover(2, 3), mover(1, 3)].
 
-hanoi(N,L) :- mover(N, _, _, _, L).
+hanoi(N,L) :- mover(N, 1, 2, 3, L).
 
-mover(1, A, _, Z, [[A, Z]]).
-mover(N, A, [H|T], Z, L) :-
-    M1 is (N - floor(sqrt(2*N + 1)) + 1),
-    M2 is (N - M1),
-    mover(M1, A, [Z|T], H, L1),
-    mover(M2, A, T    , Z, L2),
-    mover(M1, H, [A|T], Z, L3),
-    append(L1, L2, Q),
-    append(Q, L3, P).
+mover(0, _, _, _,[]).
+mover(N,P1,P2,P3,L) :-
+  N > 0,
+  M is N-1,
+  mover(M, P1, P3, P2, L1),
+  append(L1, [mover(P1,P3)],L2),
+  mover(M, P2, P3, P1,L3),
+  append(L2, L3, L).
 
-move(1, A, _, Z, [[A, Z]]).
-move(N, A, [H|T], Z, P) :-
-    M1 is (N - floor(sqrt(2*N + 1)) + 1),
-    M2 is (N - M1),
-    move(M1, A, [Z|T], H, P1),
-    move(M2, A, T    , Z, P2),
-    move(M1, H, [A|T], Z, P3),
-    append(P1, P2, Q),
-    append(Q, P3, P).
+move(0, _, _, _, []).
+move(N, P1, P2, P3, Moves) :-
+    N > 0,
+    N1 is N - 1,
+    move(N1, P1, P3, P2, M1),
+    append(M1, [mover(P1,P2)], M2),
+    move(N1, P3, P2, P1, M3),
+    append(M2, M3, Moves).
+
+hanoi2(N, Moves) :-
+    move(N, 1, 3, 2, Moves).
