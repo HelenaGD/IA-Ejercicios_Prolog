@@ -8,6 +8,18 @@
 % hanoi(3,L) debe dar L = [mover(1, 3), mover(1, 2), mover(3, 2), 
 % mover(1, 3), mover(2, 1), mover(2, 3), mover(1, 3)].
 
+hanoi(N,L) :- mover(N, _, _, _, L).
+
+mover(1, A, _, Z, [[A, Z]]).
+mover(N, A, [H|T], Z, L) :-
+    M1 is (N - floor(sqrt(2*N + 1)) + 1),
+    M2 is (N - M1),
+    mover(M1, A, [Z|T], H, L1),
+    mover(M2, A, T    , Z, L2),
+    mover(M1, H, [A|T], Z, L3),
+    append(L1, L2, Q),
+    append(Q, L3, P).
+
 move(1, A, _, Z, [[A, Z]]).
 move(N, A, [H|T], Z, P) :-
     M1 is (N - floor(sqrt(2*N + 1)) + 1),
