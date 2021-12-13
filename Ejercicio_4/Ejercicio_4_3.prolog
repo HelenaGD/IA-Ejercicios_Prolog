@@ -29,19 +29,6 @@ mover_acc(0, P1, P2, _, L1, L1) :-
 mover_acc(N, P1, P2, P3, L1, L) :- 
   N > 0,
   M is N-1,
-  mover_acc(M, P1, P3, P2, L1, L), % Se hace el movimiento
+  mover_acc(M, P1, P3, P2, L1, L), 
   mover_acc(0, P1, P2, _, L1, L),
   mover_acc(M, P3, P2, P1, L1, L).
-
-move(1, X, Y, _, L) :-
-  append(L1, [mover(X, Y)], L2),
-  append(L2, L3, L),
-  write('  Move top disk from '), write(X), write(' to '), write(Y), nl.
-
-move(N, X, Y, Z, L) :-
-  N>1,
-  M is N-1,
-  write('Level: '), write(N), nl,
-  move(M,X,Z,Y, L),
-  move(1,X,Y,_, L),
-  move(M,Z,Y,X, L).
